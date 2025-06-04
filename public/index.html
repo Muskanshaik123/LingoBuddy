@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>LingoBuddy 🌸 - Smart NLP Analyzer</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background: linear-gradient(to right, #ffe0f0, #e0f7ff);
+      margin: 0; padding: 0; text-align: center;
+    }
+    h1 {
+      padding: 20px;
+      color: #333;
+    }
+    textarea {
+      width: 80%; height: 150px; padding: 10px;
+      font-size: 1rem; border-radius: 10px; border: 1px solid #ccc;
+    }
+    button {
+      padding: 10px 25px;
+      margin-top: 10px;
+      font-size: 1rem;
+      background-color: #ff90b3;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+    }
+    button:hover {
+      background-color: #f66094;
+    }
+    #results {
+      margin-top: 30px;
+      width: 80%;
+      margin-left: auto;
+      margin-right: auto;
+      text-align: left;
+    }
+    .result-section {
+      background: #fff;
+      padding: 15px;
+      margin-bottom: 15px;
+      border-left: 6px solid #ff90b3;
+      border-radius: 8px;
+      box-shadow: 0 0 5px #ccc;
+    }
+    .result-section strong {
+      color: #444;
+    }
+  </style>
+</head>
+<body>
+  <h1>🌸 Welcome to LingoBuddy - Smart NLP Text Analyzer</h1>
+  <textarea id="inputText" placeholder="Type or paste any text..."></textarea><br>
+  <button onclick="analyzeText()">Analyze ✨</button>
+
+  <div id="results"></div>
+
+  <script>
+    async function analyzeText() {
+      const text = document.getElementById("inputText").value;
+      const res = await fetch('/analyze', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ text })
+      });
+      const data = await res.json();
+
+      let html = `
+        <div class="result-section"><strong>Sentiment:</strong> ${data.sentiment}</div>
+        <div class="result-section"><strong>Language Detected:</strong> ${data.language}</div>
+        <div class="result-section"><strong>Summary:</strong> ${data.summary}</div>
+        <div class="result-section"><strong>Corrected Text:</strong> ${data.corrected}</div>
+        <div class="result-section"><strong>Keywords:</strong> ${data.keywords.join(', ')}</div>
+        <div class="result-section"><strong>Named Entities:</strong> ${
+          data.entities.map(e => `${e.text} (${e.label})`).join(', ')
+        }</div>
+      `;
+      document.getElementById('results').innerHTML = html;
+    }
+  </script>
+</body>
+</html>
